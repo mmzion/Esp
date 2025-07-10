@@ -3,214 +3,174 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="A secure dashboard to control relays via Firebase." />
-  <title>Relay Control Panel | Firebase Dashboard</title>
+  <meta name="description" content="Secure Firebase Load Control Dashboard" />
+  <title>Load Control Dashboard</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
   <style>
-    body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    * {
+      box-sizing: border-box;
       margin: 0;
-      padding: 0 10px 40px;
-      background-color: #f4f6f8;
+      padding: 0;
+    }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: linear-gradient(to right, #e3f2fd, #fce4ec);
       display: flex;
       flex-direction: column;
       min-height: 100vh;
-      justify-content: space-between;
-      text-align: center;
+      color: #333;
     }
-
-    h1 {
-      margin-top: 30px;
-      font-size: 2rem;
-      color: #1e88e5;
-    }
-
-    .relay-card {
-      display: inline-block;
-      background-color: #fff;
-      padding: 20px;
-      margin: 15px;
-      border-radius: 15px;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-      width: 220px;
-    }
-
-    .relay-card h2 {
-      font-size: 1.2rem;
-      margin-bottom: 8px;
-    }
-
-    .relay-card p {
-      font-size: 0.95rem;
-      margin-bottom: 10px;
-    }
-
-    .relay-card button {
-      padding: 10px 20px;
-      width: 90%;
-      font-size: 15px;
-      border: none;
-      border-radius: 10px;
+    header {
       background-color: #1e88e5;
+      padding: 20px;
+      text-align: center;
       color: white;
-      cursor: pointer;
-      transition: background-color 0.3s ease;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
     }
-
-    .relay-card button:hover {
-      background-color: #0d47a1;
+    header h1 {
+      font-size: 2rem;
     }
-
-    #allOffBtn, #logoutBtn {
-      max-width: 300px;
-      width: 90%;
-      padding: 12px;
-      margin: 12px auto;
-      font-size: 16px;
-      border: none;
-      border-radius: 10px;
-      color: white;
-      cursor: pointer;
-      transition: opacity 0.3s ease;
-    }
-
-    #allOffBtn {
-      background-color: #d32f2f;
-    }
-
-    #logoutBtn {
-      background-color: #616161;
-    }
-
-    #allOffBtn:hover,
-    #logoutBtn:hover {
-      opacity: 0.85;
-    }
-
-    #dashboard {
-      display: none;
-    }
-
-    #loginForm {
-      max-width: 400px;
-      margin: 80px auto 20px;
+    #loginForm, #dashboard {
+      max-width: 900px;
+      margin: 30px auto;
       background: white;
-      padding: 30px 20px;
+      padding: 30px;
       border-radius: 15px;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
     }
-
     #loginForm input {
       width: 100%;
       padding: 12px;
-      margin: 10px 0;
-      font-size: 1rem;
+      margin-bottom: 20px;
       border: 1.5px solid #ccc;
       border-radius: 10px;
-      outline: none;
-      transition: border-color 0.3s ease;
+      font-size: 1rem;
     }
-
-    #loginForm input:focus {
-      border-color: #1e88e5;
-    }
-
     #loginForm button {
       width: 100%;
       padding: 12px;
-      font-size: 17px;
+      font-size: 1rem;
       background-color: #1e88e5;
       color: white;
       border: none;
       border-radius: 10px;
       cursor: pointer;
-      transition: background-color 0.3s ease;
     }
-
     #loginForm button:hover {
-      background-color: #0d47a1;
+      background-color: #1565c0;
     }
-
-    #dashboard .relay-container {
-      max-width: 960px;
-      margin: 20px auto;
+    .relay-container {
       display: flex;
       flex-wrap: wrap;
       justify-content: center;
+      gap: 20px;
     }
-
+    .relay-card {
+      background: #f8f9fa;
+      padding: 20px;
+      width: 200px;
+      border-radius: 15px;
+      text-align: center;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+    .relay-card h2 {
+      margin-bottom: 10px;
+      font-size: 1.2rem;
+      color: #1e88e5;
+    }
+    .relay-card p {
+      margin-bottom: 15px;
+    }
+    .relay-card button {
+      width: 100%;
+      padding: 10px;
+      font-size: 1rem;
+      border: none;
+      border-radius: 8px;
+      color: white;
+      background-color: #1e88e5;
+      cursor: pointer;
+    }
+    .relay-card button.active {
+      background-color: #43a047;
+    }
+    .action-buttons {
+      margin-top: 30px;
+      text-align: center;
+    }
+    .action-buttons button {
+      padding: 12px 25px;
+      margin: 10px;
+      font-size: 1rem;
+      border: none;
+      border-radius: 10px;
+      color: white;
+      cursor: pointer;
+    }
+    #allOffBtn { background-color: #e53935; }
+    #logoutBtn { background-color: #6d6d6d; }
+    #allOffBtn:hover, #logoutBtn:hover { opacity: 0.85; }
     footer {
       text-align: center;
-      font-size: 0.9rem;
-      color: #777;
-      padding: 15px 0;
-      border-top: 1px solid #ddd;
+      padding: 15px;
+      font-size: 0.95rem;
+      background-color: #1e88e5;
+      color: white;
       margin-top: auto;
-    }
-
-    @media (max-width: 700px) {
-      .relay-card {
-        width: 90%;
-        margin: 10px auto;
-      }
-
-      body {
-        padding: 0 10px 60px;
-      }
+      font-weight: 500;
     }
   </style>
 </head>
 <body>
+  <header>
+    <h1>Firebase Load Control Dashboard</h1>
+  </header>
 
-  <h1>Firebase Relay Control Dashboard</h1>
-
-  <!-- Login Section -->
   <div id="loginForm">
     <input type="email" id="email" placeholder="Enter your email" required />
     <input type="password" id="password" placeholder="Enter your password" required />
     <button id="loginBtn">Login</button>
   </div>
 
-  <!-- Main Dashboard -->
-  <div id="dashboard">
+  <div id="dashboard" style="display:none">
     <div class="relay-container">
       <div class="relay-card">
-        <h2>Relay 1</h2>
+        <h2>Load 1</h2>
         <p>Status: <span id="status1">Loading...</span></p>
-        <button id="btn1">Toggle</button>
+        <button id="btn1">OFF</button>
       </div>
-
       <div class="relay-card">
-        <h2>Relay 2</h2>
+        <h2>Load 2</h2>
         <p>Status: <span id="status2">Loading...</span></p>
-        <button id="btn2">Toggle</button>
+        <button id="btn2">OFF</button>
       </div>
-
       <div class="relay-card">
-        <h2>Relay 3</h2>
+        <h2>Load 3</h2>
         <p>Status: <span id="status3">Loading...</span></p>
-        <button id="btn3">Toggle</button>
+        <button id="btn3">OFF</button>
       </div>
-
       <div class="relay-card">
-        <h2>Relay 4</h2>
+        <h2>Load 4</h2>
         <p>Status: <span id="status4">Loading...</span></p>
-        <button id="btn4">Toggle</button>
+        <button id="btn4">OFF</button>
       </div>
     </div>
 
-    <button id="allOffBtn">Turn All OFF</button>
-    <button id="logoutBtn">Logout</button>
+    <div class="action-buttons">
+      <button id="allOffBtn">Turn All OFF</button>
+      <button id="logoutBtn">Logout</button>
+    </div>
   </div>
 
   <footer>
-    Made by <strong>M.M. Zion</strong> &mdash; All rights reserved © 2025
+    Crafted with ❤️ by M.M. Zion
   </footer>
 
-  <!-- Firebase SDKs -->
+  <!-- Firebase SDK -->
   <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-database-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-auth-compat.js"></script>
-
   <script>
     const firebaseConfig = {
       apiKey: "AIzaSyBx5fYrM_mVwn9pfgf5fjSxRIOvB8ViTko",
@@ -242,9 +202,7 @@
           dashboard.style.display = "block";
           initializeRelays();
         })
-        .catch(err => {
-          alert("Login failed: " + err.message);
-        });
+        .catch(err => alert("Login failed: " + err.message));
     });
 
     function initializeRelays() {
@@ -261,10 +219,11 @@
         const btn = document.getElementById(`btn${relay.id}`);
         const ref = db.ref(`/${relay.path}`);
 
-        ref.on("value", snapshot => {
-          const isOn = snapshot.val();
+        ref.on("value", snap => {
+          const isOn = snap.val();
           statusElem.textContent = isOn ? "ON" : "OFF";
-          btn.style.backgroundColor = isOn ? "green" : "#1e88e5";
+          btn.textContent = isOn ? "ON" : "OFF";
+          btn.classList.toggle("active", isOn);
         });
 
         btn.onclick = () => {
@@ -273,7 +232,7 @@
       });
 
       document.getElementById("allOffBtn").onclick = () => {
-        relays.forEach(relay => db.ref("/" + relay.path).set(false));
+        relays.forEach(relay => db.ref(`/${relay.path}`).set(false));
       };
     }
 
@@ -285,9 +244,7 @@
           document.getElementById("email").value = "";
           document.getElementById("password").value = "";
         })
-        .catch(err => {
-          alert("Logout failed: " + err.message);
-        });
+        .catch(err => alert("Logout failed: " + err.message));
     };
   </script>
 </body>
