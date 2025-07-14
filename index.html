@@ -112,3 +112,52 @@
     <div class="card" id="relay2">
       <h3>Relay 2</h3>
       <div id="status2" class="status-label off">OFF</div>
+      <button class="toggle-btn" onclick="toggleRelay(2)">Toggle</button>
+    </div>
+    <div class="card" id="relay3">
+      <h3>Relay 3</h3>
+      <div id="status3" class="status-label off">OFF</div>
+      <button class="toggle-btn" onclick="toggleRelay(3)">Toggle</button>
+    </div>
+    <div class="card" id="relay4">
+      <h3>Relay 4</h3>
+      <div id="status4" class="status-label on">ON</div>
+      <button class="toggle-btn" onclick="toggleRelay(4)">Toggle</button>
+    </div>
+  </div>
+
+  <footer>&copy; 2025 | Built by Zion</footer>
+
+  <script>
+    let uptimeSeconds = 0;
+
+    function updateUptime() {
+      uptimeSeconds++;
+      const hrs = Math.floor(uptimeSeconds / 3600);
+      const mins = Math.floor((uptimeSeconds % 3600) / 60);
+      const secs = uptimeSeconds % 60;
+      document.getElementById("uptime").innerText = `${hrs}h ${mins}m ${secs}s`;
+    }
+
+    function checkWiFiStatus() {
+      // Dummy simulation, you can fetch('/wifi-status') from ESP if needed
+      const isConnected = true;
+      document.getElementById("wifiStatus").innerText = isConnected ? "Connected" : "Disconnected";
+    }
+
+    function toggleRelay(num) {
+      const statusEl = document.getElementById("status" + num);
+      const isCurrentlyOn = statusEl.classList.contains("on");
+      statusEl.classList.toggle("on", !isCurrentlyOn);
+      statusEl.classList.toggle("off", isCurrentlyOn);
+      statusEl.innerText = !isCurrentlyOn ? "ON" : "OFF";
+
+      // Optional: Send request to ESP here
+      // fetch(`/relay${num}/toggle`)
+    }
+
+    setInterval(updateUptime, 1000);
+    setInterval(checkWiFiStatus, 5000);
+  </script>
+</body>
+</html>
