@@ -2,192 +2,265 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Smart Home Relay Dashboard</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>✨ Smart IoT Dashboard - M. M. Zion</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap');
     :root {
-      --bg: #f4f6f8;
-      --card: #fff;
-      --text: #111;
-      --accent: #4f46e5;
-      --on: #22c55e;
-      --off: #ef4444;
-      --toast-bg: #333;
-      --toast-text: #fff;
+      --primary: #1e88e5;
+      --secondary: #f5f6fa;
+      --danger: #d32f2f;
+      --success: #43a047;
+      --dark: #2f3640;
     }
-    body.dark {
-      --bg: #1e293b;
-      --card: #334155;
-      --text: #f8fafc;
-      --toast-bg: #f8fafc;
-      --toast-text: #111;
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
     }
     body {
-      margin: 0; font-family: 'Inter', sans-serif;
-      background: var(--bg); color: var(--text);
-      transition: background 0.3s, color 0.3s;
+      font-family: 'Poppins', sans-serif;
+      background-color: var(--secondary);
+      color: var(--dark);
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
     }
     header {
-      display: flex; justify-content: space-between;
-      align-items: center; padding: 1rem 2rem;
-      background: var(--card); box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+      padding: 1rem 2rem;
+      background-color: var(--primary);
+      color: white;
+      text-align: center;
+      font-size: 1.6rem;
+      font-weight: 600;
+      letter-spacing: 1px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
     }
-    h1 { font-size: 1.5rem; margin: 0; }
-    .toggle-dark {
-      cursor: pointer; font-size: 0.95rem;
-    }
-    .info-bar {
-      text-align: center; padding: 0.7rem 0;
-      font-size: 1rem; background: var(--card);
-      box-shadow: 0 2px 6px rgba(0,0,0,0.03);
-    }
-    .dashboard {
-      display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 1rem; padding: 1.5rem;
+    .container {
+      flex: 1;
+      padding: 2rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
     }
     .card {
-      background: var(--card);
-      padding: 1rem; border-radius: 12px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-      text-align: center; transition: transform 0.3s;
+      background: white;
+      border-radius: 20px;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+      margin: 15px;
+      padding: 20px;
+      width: 250px;
+      text-align: center;
+      transition: 0.3s;
     }
-    .card:hover { transform: translateY(-5px); }
-    .card h2 { margin: 0.5rem 0 1rem; font-size: 1.2rem; }
-    .status {
-      font-weight: bold;
-      padding: 0.3rem 0.8rem;
-      border-radius: 8px;
-      display: inline-block;
+    .card:hover {
+      transform: translateY(-5px);
+    }
+    .card h2 {
+      margin-bottom: 0.5rem;
+      font-size: 1.2rem;
+    }
+    .card p {
       margin-bottom: 1rem;
-      transition: background 0.4s, color 0.4s;
-    }
-    .on { background: var(--on); color: white; }
-    .off { background: var(--off); color: white; }
-    .btn {
-      background: var(--accent); color: white;
-      padding: 0.6rem 1rem; border: none;
-      border-radius: 8px; cursor: pointer;
       font-size: 1rem;
-      transition: background 0.3s ease;
     }
-    .btn:hover { opacity: 0.9; }
+    .card button {
+      background-color: var(--primary);
+      border: none;
+      color: white;
+      padding: 10px 20px;
+      border-radius: 12px;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+    .card button:hover {
+      opacity: 0.8;
+    }
+    .grid {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    .btn-wide {
+      background-color: var(--danger);
+      color: white;
+      border: none;
+      padding: 12px 30px;
+      font-size: 1rem;
+      border-radius: 14px;
+      margin: 20px 10px 0;
+      cursor: pointer;
+    }
+    .btn-logout {
+      background-color: var(--dark);
+    }
     footer {
-      text-align: center; padding: 1rem;
-      font-size: 0.9rem; color: #888;
+      text-align: center;
+      padding: 1rem;
+      font-size: 0.9rem;
+      color: #777;
     }
-    #toast {
-      position: fixed; bottom: 20px; left: 50%;
-      transform: translateX(-50%);
-      background: var(--toast-bg);
-      color: var(--toast-text);
-      padding: 0.6rem 1.2rem;
-      border-radius: 8px; font-size: 0.9rem;
-      opacity: 0; transition: opacity 0.3s;
-      z-index: 1000;
+    #loginForm {
+      background: white;
+      padding: 2rem;
+      border-radius: 15px;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+      width: 90%;
+      max-width: 400px;
+      margin: 3rem auto;
     }
-    #toast.show { opacity: 1; }
+    #loginForm input {
+      width: 100%;
+      margin-bottom: 1.2rem;
+      padding: 0.9rem;
+      font-size: 1rem;
+      border: 1.5px solid #ccc;
+      border-radius: 12px;
+      transition: border-color 0.3s ease;
+    }
+    #loginForm input:focus {
+      border-color: var(--primary);
+    }
+    #loginForm button {
+      width: 100%;
+      padding: 1rem;
+      font-size: 1rem;
+      border: none;
+      background-color: var(--primary);
+      color: white;
+      border-radius: 12px;
+      cursor: pointer;
+    }
+    #dashboard {
+      display: none;
+      padding: 2rem 1rem;
+    }
   </style>
 </head>
 <body>
+  <header>🚀 Smart IoT Dashboard - M. M. Zion
+  </header>
 
-<header>
-  <h1>🔥 Smart Home Control</h1>
-  <div class="toggle-dark">
-    <input type="checkbox" id="themeToggle" /> Dark Mode
+  <div id="loginForm">
+    <input type="email" id="email" placeholder="Email Address" />
+    <input type="password" id="password" placeholder="Password" />
+    <button id="loginBtn">Login</button>
   </div>
-</header>
 
-<div class="info-bar">
-  Wi-Fi: <span id="wifiStatus">Checking…</span> | Uptime: <span id="uptime">0s</span>
-</div>
-
-<div class="dashboard">
-  <div class="card">
-    <h2>Relay 1</h2>
-    <div id="status1" class="status">Loading...</div>
-    <button class="btn" onclick="toggleRelay(1)">Toggle</button>
+  <div id="dashboard">
+    <div class="grid">
+      <div class="card">
+        <h2>Relay 1</h2>
+        <p>Status: <span id="status1">--</span></p>
+        <button id="btn1">Toggle</button>
+      </div>
+      <div class="card">
+        <h2>Relay 2</h2>
+        <p>Status: <span id="status2">--</span></p>
+        <button id="btn2">Toggle</button>
+      </div>
+      <div class="card">
+        <h2>Relay 3</h2>
+        <p>Status: <span id="status3">--</span></p>
+        <button id="btn3">Toggle</button>
+      </div>
+      <div class="card">
+        <h2>Relay 4</h2>
+        <p>Status: <span id="status4">--</span></p>
+        <button id="btn4">Toggle</button>
+      </div>
+    </div>
+    <button class="btn-wide" id="allOffBtn">All OFF</button>
+    <button class="btn-wide btn-logout" id="logoutBtn">Logout</button>
   </div>
-  <div class="card">
-    <h2>Relay 2</h2>
-    <div id="status2" class="status">Loading...</div>
-    <button class="btn" onclick="toggleRelay(2)">Toggle</button>
-  </div>
-  <div class="card">
-    <h2>Relay 3</h2>
-    <div id="status3" class="status">Loading...</div>
-    <button class="btn" onclick="toggleRelay(3)">Toggle</button>
-  </div>
-  <div class="card">
-    <h2>Relay 4</h2>
-    <div id="status4" class="status">Loading...</div>
-    <button class="btn" onclick="toggleRelay(4)">Toggle</button>
-  </div>
-</div>
 
-<footer>
-  &copy; 2025 Smart Home by Zion
-</footer>
+  <footer>
+    © 2025 M. M. Zion | Firebase & ESP8266 Control Panel
+  </footer>
 
-<div id="toast">Status updated</div>
+  <!-- Firebase SDKs -->
+  <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-database-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-auth-compat.js"></script>
 
-<!-- Firebase SDK -->
-<script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-database-compat.js"></script>
-
-<script>
-  const firebaseConfig = {
-    apiKey: "AIzaSyBx5fYrM_mVwn9pfgf5fjSxRIOvB8ViTko",
+  <script>
+    const firebaseConfig = {
+     apiKey: "AIzaSyBx5fYrM_mVwn9pfgf5fjSxRIOvB8ViTko",
   authDomain: "esp-test-ff3e3.firebaseapp.com",
   databaseURL: "https://esp-test-ff3e3-default-rtdb.firebaseio.com",
   projectId: "esp-test-ff3e3",
   storageBucket: "esp-test-ff3e3.firebasestorage.app",
   messagingSenderId: "431926409160",
   appId: "1:431926409160:web:534274240d408acecbf2fd"
-  };
+    };
 
-  firebase.initializeApp(firebaseConfig);
-  const db = firebase.database();
+    firebase.initializeApp(firebaseConfig);
 
-  const relays = [1, 2, 3, 4];
-  let uptime = 0;
+    const loginForm = document.getElementById("loginForm");
+    const dashboard = document.getElementById("dashboard");
+    const loginBtn = document.getElementById("loginBtn");
 
-  relays.forEach(id => {
-    const ref = db.ref("/relay" + id);
-    const statusEl = document.getElementById("status" + id);
-    ref.on("value", snap => {
-      const val = snap.val();
-      statusEl.textContent = val ? "ON" : "OFF";
-      statusEl.className = "status " + (val ? "on" : "off");
+    loginBtn.addEventListener("click", () => {
+      const email = document.getElementById("email").value.trim();
+      const password = document.getElementById("password").value;
+
+      if (!email || !password) {
+        alert("Please enter email and password.");
+        return;
+      }
+
+      firebase.auth().signInWithEmailAndPassword(email, password)
+        .then(() => {
+          loginForm.style.display = "none";
+          dashboard.style.display = "block";
+          startRelayControl();
+        })
+        .catch(error => {
+          alert("Login failed: " + error.message);
+        });
     });
-  });
 
-  function toggleRelay(id) {
-    const ref = db.ref("/relay" + id);
-    ref.once("value").then(snap => {
-      ref.set(!snap.val());
-      showToast(`Relay ${id} toggled`);
-    });
-  }
+    function startRelayControl() {
+      const db = firebase.database();
+      const relays = [1, 2, 3, 4];
 
-  function showToast(msg) {
-    const toast = document.getElementById("toast");
-    toast.textContent = msg;
-    toast.classList.add("show");
-    setTimeout(() => toast.classList.remove("show"), 2000);
-  }
+      relays.forEach(id => {
+        const statusSpan = document.getElementById("status" + id);
+        const button = document.getElementById("btn" + id);
+        const ref = db.ref("/relay" + id);
 
-  setInterval(() => {
-    uptime++;
-    document.getElementById("uptime").textContent = uptime + "s";
-    document.getElementById("wifiStatus").textContent =
-      navigator.onLine ? "Connected" : "Offline";
-  }, 1000);
+        ref.on("value", snap => {
+          const state = snap.val();
+          statusSpan.innerText = state ? "ON" : "OFF";
+          button.style.backgroundColor = state ? "#43a047" : "#1e88e5";
+        });
 
-  document.getElementById("themeToggle").addEventListener("change", (e) => {
-    document.body.classList.toggle("dark", e.target.checked);
-  });
-</script>
+        button.onclick = () => {
+          ref.get().then(snap => {
+            ref.set(!snap.val());
+          });
+        };
+      });
 
+      document.getElementById("allOffBtn").onclick = () => {
+        relays.forEach(id => {
+          db.ref("/relay" + id).set(false);
+        });
+      };
+    }
+
+    document.getElementById("logoutBtn").onclick = () => {
+      firebase.auth().signOut()
+        .then(() => {
+          dashboard.style.display = "none";
+          loginForm.style.display = "block";
+        })
+        .catch(error => {
+          alert("Logout failed: " + error.message);
+        });
+    };
+  </script>
 </body>
 </html>
