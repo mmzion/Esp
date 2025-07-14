@@ -2,296 +2,167 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Smart Relay Dashboard</title>
+  <title>Smart Home Relay Dashboard</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
   <style>
-    * {
-      box-sizing: border-box;
-    }
     body {
+      font-family: "Segoe UI", sans-serif;
+      background-color: #f4f6f9;
       margin: 0;
-      font-family: 'Poppins', sans-serif;
-      background: linear-gradient(135deg, #e0f7fa, #e3f2fd);
+      padding: 0;
       color: #333;
-      display: flex;
-      flex-direction: column;
-      min-height: 100vh;
-      align-items: center;
-      justify-content: flex-start;
-      padding-bottom: 50px;
     }
-    h1 {
-      margin: 30px 0 10px;
-      font-size: 2rem;
-      color: #1565c0;
-    }
-    .relay-container {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 20px;
-      max-width: 1100px;
-      margin: 30px auto;
-    }
-    .relay-card {
-      background: rgba(255, 255, 255, 0.8);
-      backdrop-filter: blur(10px);
-      border-radius: 20px;
-      padding: 25px;
-      width: 240px;
-      text-align: center;
-      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
-    }
-    .relay-card:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
-    }
-    .relay-card h2 {
-      font-size: 1.4rem;
-      margin-bottom: 10px;
-    }
-    .relay-card p {
-      font-size: 1rem;
-      margin-bottom: 15px;
-    }
-    .relay-card button {
-      background-color: #1976d2;
-      border: none;
-      border-radius: 10px;
-      color: #fff;
-      padding: 10px 20px;
-      font-size: 1rem;
-      cursor: pointer;
-      transition: background-color 0.3s ease, transform 0.2s ease;
-    }
-    .relay-card button:hover {
-      background-color: #0d47a1;
-      transform: scale(1.03);
-    }
-    #allOffBtn, #logoutBtn {
-      padding: 14px 30px;
-      font-size: 16px;
-      margin: 10px;
-      border-radius: 12px;
-      border: none;
+
+    header {
+      background-color: #4CAF50;
       color: white;
+      padding: 1rem;
+      text-align: center;
+      font-size: 1.5rem;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+
+    .status {
+      text-align: center;
+      margin: 1rem auto;
+    }
+
+    .status span {
+      font-weight: bold;
+      padding: 0.5rem 1rem;
+      border-radius: 10px;
+    }
+
+    .wifi-online {
+      background-color: #d4edda;
+      color: #155724;
+    }
+
+    .wifi-offline {
+      background-color: #f8d7da;
+      color: #721c24;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 1rem auto;
+      padding: 1rem;
+    }
+
+    .relay {
+      background-color: white;
+      border-radius: 10px;
+      padding: 1rem;
+      margin: 1rem 0;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .relay-status {
+      font-size: 1rem;
+      font-weight: bold;
+    }
+
+    .relay-on {
+      color: #4CAF50;
+    }
+
+    .relay-off {
+      color: #f44336;
+    }
+
+    .relay button {
+      padding: 0.5rem 1rem;
+      border: none;
+      border-radius: 6px;
+      background-color: #2196F3;
+      color: white;
+      font-weight: bold;
       cursor: pointer;
-      transition: background-color 0.3s ease, transform 0.2s ease;
+      transition: background 0.3s;
     }
-    #allOffBtn {
-      background-color: #d32f2f;
+
+    .relay button:hover {
+      background-color: #1976D2;
     }
-    #allOffBtn:hover {
-      background-color: #b71c1c;
-      transform: scale(1.03);
-    }
-    #logoutBtn {
-      background-color: #6d4c41;
-    }
-    #logoutBtn:hover {
-      background-color: #4e342e;
-      transform: scale(1.03);
-    }
+
     footer {
       text-align: center;
       font-size: 0.9rem;
-      color: #666;
-      margin-top: auto;
-      padding: 20px 0;
-    }
-
-    #loginForm {
-      max-width: 400px;
-      background: white;
-      padding: 30px 25px;
-      border-radius: 15px;
-      margin-top: 60px;
-      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
-      animation: fadeIn 1s ease-in-out;
-    }
-    #loginForm input {
-      width: 100%;
-      padding: 12px 15px;
-      margin-bottom: 20px;
-      border-radius: 10px;
-      border: 1.5px solid #ccc;
-      font-size: 1rem;
-      transition: 0.3s;
-    }
-    #loginForm input:focus {
-      border-color: #42a5f5;
-      outline: none;
-    }
-    #loginForm button {
-      width: 100%;
-      background: #1e88e5;
-      border: none;
-      color: white;
-      padding: 12px;
-      font-size: 1.1rem;
-      border-radius: 10px;
-      cursor: pointer;
-      transition: background 0.3s ease;
-    }
-    #loginForm button:hover {
-      background: #1565c0;
-    }
-
-    #dashboard {
-      display: none;
-      width: 100%;
-    }
-
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(10px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    @media (max-width: 768px) {
-      .relay-container {
-        flex-direction: column;
-        align-items: center;
-      }
-      .relay-card {
-        width: 90%;
-      }
+      color: #999;
+      padding: 1rem;
     }
   </style>
 </head>
 <body>
+  <header>
+    ESP8266 Smart Home Dashboard
+  </header>
 
-  <h1>Smart Relay Control</h1>
-
-  <!-- Login -->
-  <div id="loginForm">
-    <input type="email" id="email" placeholder="Enter Email" required />
-    <input type="password" id="password" placeholder="Enter Password" required />
-    <button id="loginBtn">Login</button>
+  <div class="status">
+    Wi-Fi Status:
+    <span id="wifiStatus" class="wifi-online">Connected</span>
+    | Uptime: <span id="uptime">Loading...</span>
   </div>
 
-  <!-- Dashboard -->
-  <div id="dashboard">
-    <div class="relay-container">
-      <div class="relay-card">
-        <h2>Relay 1</h2>
-        <p>Status: <span id="status1">Loading...</span></p>
-        <button id="btn1">Toggle</button>
-      </div>
-      <div class="relay-card">
-        <h2>Relay 2</h2>
-        <p>Status: <span id="status2">Loading...</span></p>
-        <button id="btn2">Toggle</button>
-      </div>
-      <div class="relay-card">
-        <h2>Relay 3</h2>
-        <p>Status: <span id="status3">Loading...</span></p>
-        <button id="btn3">Toggle</button>
-      </div>
-      <div class="relay-card">
-        <h2>Relay 4</h2>
-        <p>Status: <span id="status4">Loading...</span></p>
-        <button id="btn4">Toggle</button>
-      </div>
+  <div class="container">
+    <div class="relay" id="relay1">
+      <span>Relay 1</span>
+      <span class="relay-status" id="r1status">ON</span>
+      <button onclick="toggleRelay(1)">Toggle</button>
     </div>
-
-    <button id="allOffBtn">All OFF</button>
-    <button id="logoutBtn">Logout</button>
+    <div class="relay" id="relay2">
+      <span>Relay 2</span>
+      <span class="relay-status" id="r2status">OFF</span>
+      <button onclick="toggleRelay(2)">Toggle</button>
+    </div>
+    <div class="relay" id="relay3">
+      <span>Relay 3</span>
+      <span class="relay-status" id="r3status">OFF</span>
+      <button onclick="toggleRelay(3)">Toggle</button>
+    </div>
+    <div class="relay" id="relay4">
+      <span>Relay 4</span>
+      <span class="relay-status" id="r4status">ON</span>
+      <button onclick="toggleRelay(4)">Toggle</button>
+    </div>
   </div>
 
   <footer>
-    © 2025 Zion | IoT Smart Dashboard
+    &copy; 2025 SmartHome by Zion
   </footer>
 
-  <!-- Firebase SDKs -->
-  <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-database-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-auth-compat.js"></script>
-
   <script>
-    const firebaseConfig = {
-       apiKey: "AIzaSyBx5fYrM_mVwn9pfgf5fjSxRIOvB8ViTko",
-  authDomain: "esp-test-ff3e3.firebaseapp.com",
-  databaseURL: "https://esp-test-ff3e3-default-rtdb.firebaseio.com",
-  projectId: "esp-test-ff3e3",
-  storageBucket: "esp-test-ff3e3.firebasestorage.app",
-  messagingSenderId: "431926409160",
-  appId: "1:431926409160:web:534274240d408acecbf2fd"
-    };
+    let uptimeSec = 0;
 
-    firebase.initializeApp(firebaseConfig);
-
-    const loginForm = document.getElementById("loginForm");
-    const dashboard = document.getElementById("dashboard");
-    const loginBtn = document.getElementById("loginBtn");
-
-    loginBtn.addEventListener("click", () => {
-      const email = document.getElementById("email").value.trim();
-      const password = document.getElementById("password").value;
-
-      if (!email || !password) {
-        alert("Please enter email and password.");
-        return;
-      }
-
-      firebase.auth().signInWithEmailAndPassword(email, password)
-        .then(userCredential => {
-          loginForm.style.display = "none";
-          dashboard.style.display = "block";
-          startRelayControl();
-        })
-        .catch(error => {
-          alert("Login failed: " + error.message);
-        });
-    });
-
-    function startRelayControl() {
-      const db = firebase.database();
-      const relays = [
-        { id: 1, path: "relay1" },
-        { id: 2, path: "relay2" },
-        { id: 3, path: "relay3" },
-        { id: 4, path: "relay4" },
-      ];
-
-      relays.forEach(relay => {
-        const statusText = document.getElementById(`status${relay.id}`);
-        const toggleButton = document.getElementById(`btn${relay.id}`);
-        const relayRef = db.ref("/" + relay.path);
-
-        relayRef.on("value", snapshot => {
-          const state = snapshot.val();
-          statusText.innerText = state ? "ON" : "OFF";
-          toggleButton.style.backgroundColor = state ? "#388e3c" : "#1976d2";
-        });
-
-        toggleButton.onclick = () => {
-          relayRef.get().then(snap => {
-            relayRef.set(!snap.val());
-          });
-        };
-      });
-
-      document.getElementById("allOffBtn").onclick = () => {
-        relays.forEach(relay => {
-          db.ref("/" + relay.path).set(false);
-        });
-      };
+    function updateUptime() {
+      uptimeSec++;
+      const hrs = Math.floor(uptimeSec / 3600);
+      const mins = Math.floor((uptimeSec % 3600) / 60);
+      const secs = uptimeSec % 60;
+      document.getElementById("uptime").textContent =
+        `${hrs}h ${mins}m ${secs}s`;
     }
 
-    document.getElementById("logoutBtn").onclick = () => {
-      firebase.auth().signOut()
-        .then(() => {
-          dashboard.style.display = "none";
-          loginForm.style.display = "block";
-          document.getElementById("email").value = "";
-          document.getElementById("password").value = "";
-        })
-        .catch(error => {
-          alert("Logout failed: " + error.message);
-        });
-    };
+    function toggleRelay(relayNum) {
+      // You can make an API call to your ESP8266 here
+      alert("Relay " + relayNum + " toggled (dummy action)");
+      // Example: fetch(`/relay${relayNum}/toggle`)
+    }
+
+    // Simulated Wi-Fi check (you can poll your ESP here)
+    function checkWiFi() {
+      // Example: fetch('/wifi-status') then update based on response
+      let isConnected = true; // Simulated
+      let el = document.getElementById("wifiStatus");
+      el.textContent = isConnected ? "Connected" : "Disconnected";
+      el.className = isConnected ? "wifi-online" : "wifi-offline";
+    }
+
+    setInterval(updateUptime, 1000); // Update uptime every second
+    setInterval(checkWiFi, 5000);    // Update WiFi status every 5 sec
   </script>
 </body>
 </html>
