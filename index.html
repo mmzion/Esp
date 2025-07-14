@@ -1,251 +1,66 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="Secure Firebase Load Control Dashboard" />
-  <title>Load Control Dashboard</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
-  <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-    body {
-      font-family: 'Inter', sans-serif;
-      background: linear-gradient(to right, #e3f2fd, #fce4ec);
-      display: flex;
-      flex-direction: column;
-      min-height: 100vh;
-      color: #333;
-    }
-    header {
-      background-color: #1e88e5;
-      padding: 20px;
-      text-align: center;
-      color: white;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-    }
-    header h1 {
-      font-size: 2rem;
-    }
-    #loginForm, #dashboard {
-      max-width: 900px;
-      margin: 30px auto;
-      background: white;
-      padding: 30px;
-      border-radius: 15px;
-      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
-    }
-    #loginForm input {
-      width: 100%;
-      padding: 12px;
-      margin-bottom: 20px;
-      border: 1.5px solid #ccc;
-      border-radius: 10px;
-      font-size: 1rem;
-    }
-    #loginForm button {
-      width: 100%;
-      padding: 12px;
-      font-size: 1rem;
-      background-color: #1e88e5;
-      color: white;
-      border: none;
-      border-radius: 10px;
-      cursor: pointer;
-    }
-    #loginForm button:hover {
-      background-color: #1565c0;
-    }
-    .relay-container {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 20px;
-    }
-    .relay-card {
-      background: #f8f9fa;
-      padding: 20px;
-      width: 200px;
-      border-radius: 15px;
-      text-align: center;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    }
-    .relay-card h2 {
-      margin-bottom: 10px;
-      font-size: 1.2rem;
-      color: #1e88e5;
-    }
-    .relay-card p {
-      margin-bottom: 15px;
-    }
-    .relay-card button {
-      width: 100%;
-      padding: 10px;
-      font-size: 1rem;
-      border: none;
-      border-radius: 8px;
-      color: white;
-      background-color: #1e88e5;
-      cursor: pointer;
-    }
-    .relay-card button.active {
-      background-color: #43a047;
-    }
-    .action-buttons {
-      margin-top: 30px;
-      text-align: center;
-    }
-    .action-buttons button {
-      padding: 12px 25px;
-      margin: 10px;
-      font-size: 1rem;
-      border: none;
-      border-radius: 10px;
-      color: white;
-      cursor: pointer;
-    }
-    #allOffBtn { background-color: #e53935; }
-    #logoutBtn { background-color: #6d6d6d; }
-    #allOffBtn:hover, #logoutBtn:hover { opacity: 0.85; }
-    footer {
-      text-align: center;
-      padding: 15px;
-      font-size: 0.95rem;
-      background-color: #1e88e5;
-      color: white;
-      margin-top: auto;
-      font-weight: 500;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zion's Smart Home Dashboard</title>
+    <link rel="stylesheet" href="style.css">
+
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-database-compat.js"></script>
 </head>
 <body>
-  <header>
-    <h1>Firebase Load Control Dashboard</h1>
-  </header>
+    <div class="container">
+        <h1>Zion's Smart Home Dashboard</h1>
 
-  <div id="loginForm">
-    <input type="email" id="email" placeholder="Enter your email" required />
-    <input type="password" id="password" placeholder="Enter your password" required />
-    <button id="loginBtn">Login</button>
-  </div>
+        <div id="login-section" class="card">
+            <h2>Firebase Login</h2>
+            <input type="email" id="email" placeholder="Email" value="mmzionbd@gmail.com">
+            <input type="password" id="password" placeholder="Password" value="415012">
+            <button id="login-btn">Login</button>
+            <p id="login-status"></p>
+        </div>
 
-  <div id="dashboard" style="display:none">
-    <div class="relay-container">
-      <div class="relay-card">
-        <h2>Load 1</h2>
-        <p>Status: <span id="status1">Loading...</span></p>
-        <button id="btn1">OFF</button>
-      </div>
-      <div class="relay-card">
-        <h2>Load 2</h2>
-        <p>Status: <span id="status2">Loading...</span></p>
-        <button id="btn2">OFF</button>
-      </div>
-      <div class="relay-card">
-        <h2>Load 3</h2>
-        <p>Status: <span id="status3">Loading...</span></p>
-        <button id="btn3">OFF</button>
-      </div>
-      <div class="relay-card">
-        <h2>Load 4</h2>
-        <p>Status: <span id="status4">Loading...</span></p>
-        <button id="btn4">OFF</button>
-      </div>
+        <div id="dashboard-section" style="display: none;">
+            <div class="header-info">
+                <p>Logged in as: <span id="user-email"></span></p>
+                <button id="logout-btn">Logout</button>
+            </div>
+
+            <div class="card system-status">
+                <h2>System Status</h2>
+                <p>WiFi: <span id="wifi-status" class="status-indicator unknown">UNKNOWN</span></p>
+                <p>Firebase: <span id="firebase-status" class="status-indicator unknown">UNKNOWN</span></p>
+                <p>Uptime: <span id="uptime-display">N/A</span></p>
+                <p>Last Heartbeat: <span id="heartbeat-display">N/A</span></p>
+            </div>
+
+            <div class="relay-grid">
+                <div class="card relay-card" id="relay1-card">
+                    <h3>Living Room</h3>
+                    <p class="relay-status-text">Status: <span id="relay1-status" class="status-indicator unknown">UNKNOWN</span></p>
+                    <button class="toggle-btn" data-relay="1">Toggle</button>
+                </div>
+                <div class="card relay-card" id="relay2-card">
+                    <h3>Kitchen</h3>
+                    <p class="relay-status-text">Status: <span id="relay2-status" class="status-indicator unknown">UNKNOWN</span></p>
+                    <button class="toggle-btn" data-relay="2">Toggle</button>
+                </div>
+                <div class="card relay-card" id="relay3-card">
+                    <h3>Bedroom</h3>
+                    <p class="relay-status-text">Status: <span id="relay3-status" class="status-indicator unknown">UNKNOWN</span></p>
+                    <button class="toggle-btn" data-relay="3">Toggle</button>
+                </div>
+                <div class="card relay-card" id="relay4-card">
+                    <h3>Garden</h3>
+                    <p class="relay-status-text">Status: <span id="relay4-status" class="status-indicator unknown">UNKNOWN</span></p>
+                    <button class="toggle-btn" data-relay="4">Toggle</button>
+                </div>
+            </div>
+        </div>
     </div>
 
-    <div class="action-buttons">
-      <button id="allOffBtn">Turn All OFF</button>
-      <button id="logoutBtn">Logout</button>
-    </div>
-  </div>
-
-  <footer>
-    Crafted with ❤️ by M.M. Zion
-  </footer>
-
-  <!-- Firebase SDK -->
-  <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-database-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-auth-compat.js"></script>
-  <script>
-    const firebaseConfig = {
-      apiKey: "AIzaSyBx5fYrM_mVwn9pfgf5fjSxRIOvB8ViTko",
-      authDomain: "esp-test-ff3e3.firebaseapp.com",
-      databaseURL: "https://esp-test-ff3e3-default-rtdb.firebaseio.com",
-      projectId: "esp-test-ff3e3",
-      storageBucket: "esp-test-ff3e3.appspot.com",
-      messagingSenderId: "431926409160",
-      appId: "1:431926409160:web:534274240d408acecbf2fd"
-    };
-
-    firebase.initializeApp(firebaseConfig);
-
-    const loginForm = document.getElementById("loginForm");
-    const dashboard = document.getElementById("dashboard");
-
-    document.getElementById("loginBtn").addEventListener("click", () => {
-      const email = document.getElementById("email").value.trim();
-      const password = document.getElementById("password").value;
-
-      if (!email || !password) {
-        alert("Please enter both email and password.");
-        return;
-      }
-
-      firebase.auth().signInWithEmailAndPassword(email, password)
-        .then(() => {
-          loginForm.style.display = "none";
-          dashboard.style.display = "block";
-          initializeRelays();
-        })
-        .catch(err => alert("Login failed: " + err.message));
-    });
-
-    function initializeRelays() {
-      const db = firebase.database();
-      const relays = [
-        { id: 1, path: "relay1" },
-        { id: 2, path: "relay2" },
-        { id: 3, path: "relay3" },
-        { id: 4, path: "relay4" },
-      ];
-
-      relays.forEach(relay => {
-        const statusElem = document.getElementById(`status${relay.id}`);
-        const btn = document.getElementById(`btn${relay.id}`);
-        const ref = db.ref(`/${relay.path}`);
-
-        ref.on("value", snap => {
-          const isOn = snap.val();
-          statusElem.textContent = isOn ? "ON" : "OFF";
-          btn.textContent = isOn ? "ON" : "OFF";
-          btn.classList.toggle("active", isOn);
-        });
-
-        btn.onclick = () => {
-          ref.get().then(snap => ref.set(!snap.val()));
-        };
-      });
-
-      document.getElementById("allOffBtn").onclick = () => {
-        relays.forEach(relay => db.ref(`/${relay.path}`).set(false));
-      };
-    }
-
-    document.getElementById("logoutBtn").onclick = () => {
-      firebase.auth().signOut()
-        .then(() => {
-          dashboard.style.display = "none";
-          loginForm.style.display = "block";
-          document.getElementById("email").value = "";
-          document.getElementById("password").value = "";
-        })
-        .catch(err => alert("Logout failed: " + err.message));
-    };
-  </script>
+    <script src="script.js"></script>
 </body>
 </html>
