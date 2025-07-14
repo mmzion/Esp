@@ -3,15 +3,17 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>✨ Smart IoT Dashboard - M. M. Zion</title>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
+  <title>🔌 Smart Home Dashboard - M. M. Zion</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet" />
   <style>
     :root {
-      --primary: #1e88e5;
-      --secondary: #f5f6fa;
-      --danger: #d32f2f;
-      --success: #43a047;
-      --dark: #2f3640;
+      --primary: #4a90e2;
+      --accent: #00c853;
+      --danger: #e53935;
+      --dark: #263238;
+      --light: #f5f7fa;
+      --white: #ffffff;
+      --shadow: rgba(0, 0, 0, 0.15);
     }
     * {
       box-sizing: border-box;
@@ -19,22 +21,21 @@
       padding: 0;
     }
     body {
-      font-family: 'Poppins', sans-serif;
-      background-color: var(--secondary);
+      font-family: 'Roboto', sans-serif;
+      background-color: var(--light);
       color: var(--dark);
       display: flex;
       flex-direction: column;
       min-height: 100vh;
     }
     header {
+      background: linear-gradient(to right, var(--primary), var(--accent));
       padding: 1rem 2rem;
-      background-color: var(--primary);
-      color: white;
       text-align: center;
-      font-size: 1.6rem;
-      font-weight: 600;
-      letter-spacing: 1px;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      color: var(--white);
+      font-size: 1.8rem;
+      font-weight: 700;
+      box-shadow: 0 4px 12px var(--shadow);
     }
     .container {
       flex: 1;
@@ -42,149 +43,187 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: center;
     }
-    .card {
-      background: white;
+    .info-panel {
+      background-color: var(--white);
+      box-shadow: 0 4px 16px var(--shadow);
       border-radius: 20px;
-      box-shadow: 0 6px 20px rgba(0,0,0,0.1);
-      margin: 15px;
       padding: 20px;
-      width: 250px;
+      margin-bottom: 30px;
+      width: 100%;
+      max-width: 960px;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-around;
+      gap: 20px;
+      font-size: 0.95rem;
+    }
+    .info-panel div {
       text-align: center;
-      transition: 0.3s;
+      flex: 1;
     }
-    .card:hover {
-      transform: translateY(-5px);
-    }
-    .card h2 {
-      margin-bottom: 0.5rem;
-      font-size: 1.2rem;
-    }
-    .card p {
-      margin-bottom: 1rem;
-      font-size: 1rem;
-    }
-    .card button {
-      background-color: var(--primary);
-      border: none;
-      color: white;
-      padding: 10px 20px;
-      border-radius: 12px;
-      font-size: 1rem;
-      cursor: pointer;
-      transition: 0.3s;
-    }
-    .card button:hover {
-      opacity: 0.8;
+    .info-panel span {
+      font-weight: bold;
+      color: var(--primary);
     }
     .grid {
       display: flex;
       flex-wrap: wrap;
       justify-content: center;
+      gap: 20px;
     }
-    .btn-wide {
-      background-color: var(--danger);
-      color: white;
-      border: none;
-      padding: 12px 30px;
+    .card {
+      background: var(--white);
+      border-radius: 20px;
+      box-shadow: 0 6px 20px var(--shadow);
+      padding: 25px;
+      width: 260px;
+      text-align: center;
+      transition: transform 0.3s ease;
+    }
+    .card:hover {
+      transform: translateY(-5px);
+    }
+    .card h2 {
+      font-size: 1.3rem;
+      margin-bottom: 0.5rem;
+    }
+    .card p {
+      margin-bottom: 1rem;
+    }
+    .card button {
+      background: var(--primary);
+      color: var(--white);
+      padding: 10px 20px;
       font-size: 1rem;
-      border-radius: 14px;
-      margin: 20px 10px 0;
+      border: none;
+      border-radius: 12px;
       cursor: pointer;
+      transition: background 0.3s ease;
     }
-    .btn-logout {
-      background-color: var(--dark);
+    .card button:hover {
+      background: var(--accent);
+    }
+    .btn-bar {
+      margin-top: 30px;
+      display: flex;
+      gap: 20px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    .btn-bar button {
+      padding: 14px 28px;
+      font-size: 1rem;
+      border: none;
+      border-radius: 14px;
+      cursor: pointer;
+      color: var(--white);
+      transition: background 0.3s ease;
+    }
+    #allOffBtn {
+      background: var(--danger);
+    }
+    #logoutBtn {
+      background: var(--dark);
+    }
+    #loginForm {
+      max-width: 400px;
+      margin: 3rem auto;
+      background: var(--white);
+      padding: 30px;
+      border-radius: 20px;
+      box-shadow: 0 6px 20px var(--shadow);
+    }
+    #loginForm input {
+      width: 100%;
+      margin-bottom: 1.2rem;
+      padding: 1rem;
+      font-size: 1rem;
+      border-radius: 12px;
+      border: 1.5px solid #ccc;
+    }
+    #loginForm button {
+      width: 100%;
+      padding: 1rem;
+      background: var(--primary);
+      color: var(--white);
+      font-size: 1rem;
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
     }
     footer {
       text-align: center;
       padding: 1rem;
       font-size: 0.9rem;
-      color: #777;
+      background: #eceff1;
+      color: #555;
     }
-    #loginForm {
-      background: white;
-      padding: 2rem;
-      border-radius: 15px;
-      box-shadow: 0 6px 20px rgba(0,0,0,0.1);
-      width: 90%;
-      max-width: 400px;
-      margin: 3rem auto;
-    }
-    #loginForm input {
-      width: 100%;
-      margin-bottom: 1.2rem;
-      padding: 0.9rem;
-      font-size: 1rem;
-      border: 1.5px solid #ccc;
-      border-radius: 12px;
-      transition: border-color 0.3s ease;
-    }
-    #loginForm input:focus {
-      border-color: var(--primary);
-    }
-    #loginForm button {
-      width: 100%;
-      padding: 1rem;
-      font-size: 1rem;
-      border: none;
-      background-color: var(--primary);
-      color: white;
-      border-radius: 12px;
-      cursor: pointer;
-    }
-    #dashboard {
-      display: none;
-      padding: 2rem 1rem;
+    @media (max-width: 600px) {
+      .card {
+        width: 90%;
+      }
+      .info-panel {
+        flex-direction: column;
+        align-items: center;
+      }
     }
   </style>
 </head>
 <body>
-  <header>🚀 Smart IoT Dashboard - M. M. Zion
+  <header>🔌 Smart IoT Dashboard - M. M. Zion
   </header>
 
   <div id="loginForm">
-    <input type="email" id="email" placeholder="Email Address" />
-    <input type="password" id="password" placeholder="Password" />
+    <input type="email" id="email" placeholder="Enter Email" />
+    <input type="password" id="password" placeholder="Enter Password" />
     <button id="loginBtn">Login</button>
   </div>
 
-  <div id="dashboard">
-    <div class="grid">
-      <div class="card">
-        <h2>Relay 1</h2>
-        <p>Status: <span id="status1">--</span></p>
-        <button id="btn1">Toggle</button>
+  <div id="dashboard" style="display:none">
+    <div class="container">
+      <div class="info-panel">
+        <div>Device: <span>ESP8266</span></div>
+        <div>Status: <span id="wifiStatus">Connected</span></div>
+        <div>Last Updated: <span id="lastUpdate">--</span></div>
+        <div>User: <span id="currentUser">--</span></div>
       </div>
-      <div class="card">
-        <h2>Relay 2</h2>
-        <p>Status: <span id="status2">--</span></p>
-        <button id="btn2">Toggle</button>
+      <div class="grid">
+        <div class="card">
+          <h2>Relay 1</h2>
+          <p>Status: <span id="status1">--</span></p>
+          <button id="btn1">Toggle</button>
+        </div>
+        <div class="card">
+          <h2>Relay 2</h2>
+          <p>Status: <span id="status2">--</span></p>
+          <button id="btn2">Toggle</button>
+        </div>
+        <div class="card">
+          <h2>Relay 3</h2>
+          <p>Status: <span id="status3">--</span></p>
+          <button id="btn3">Toggle</button>
+        </div>
+        <div class="card">
+          <h2>Relay 4</h2>
+          <p>Status: <span id="status4">--</span></p>
+          <button id="btn4">Toggle</button>
+        </div>
       </div>
-      <div class="card">
-        <h2>Relay 3</h2>
-        <p>Status: <span id="status3">--</span></p>
-        <button id="btn3">Toggle</button>
-      </div>
-      <div class="card">
-        <h2>Relay 4</h2>
-        <p>Status: <span id="status4">--</span></p>
-        <button id="btn4">Toggle</button>
+      <div class="btn-bar">
+        <button id="allOffBtn">Turn All OFF</button>
+        <button id="logoutBtn">Logout</button>
       </div>
     </div>
-    <button class="btn-wide" id="allOffBtn">All OFF</button>
-    <button class="btn-wide btn-logout" id="logoutBtn">Logout</button>
   </div>
 
   <footer>
-    © 2025 M. M. Zion | Firebase & ESP8266 Control Panel
+    © 2025 M. M. Zion | Firebase & ESP8266 IoT Control Panel
   </footer>
 
-  <!-- Firebase SDKs -->
   <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-database-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-auth-compat.js"></script>
-
   <script>
     const firebaseConfig = {
      apiKey: "AIzaSyBx5fYrM_mVwn9pfgf5fjSxRIOvB8ViTko",
@@ -195,72 +234,52 @@
   messagingSenderId: "431926409160",
   appId: "1:431926409160:web:534274240d408acecbf2fd"
     };
-
     firebase.initializeApp(firebaseConfig);
 
     const loginForm = document.getElementById("loginForm");
     const dashboard = document.getElementById("dashboard");
     const loginBtn = document.getElementById("loginBtn");
+    const currentUser = document.getElementById("currentUser");
+    const lastUpdate = document.getElementById("lastUpdate");
 
     loginBtn.addEventListener("click", () => {
       const email = document.getElementById("email").value.trim();
       const password = document.getElementById("password").value;
-
-      if (!email || !password) {
-        alert("Please enter email and password.");
-        return;
-      }
-
+      if (!email || !password) return alert("Please enter credentials.");
       firebase.auth().signInWithEmailAndPassword(email, password)
-        .then(() => {
+        .then(user => {
           loginForm.style.display = "none";
           dashboard.style.display = "block";
+          currentUser.textContent = user.user.email;
           startRelayControl();
         })
-        .catch(error => {
-          alert("Login failed: " + error.message);
-        });
+        .catch(err => alert("Login failed: " + err.message));
     });
 
     function startRelayControl() {
       const db = firebase.database();
       const relays = [1, 2, 3, 4];
-
-      relays.forEach(id => {
-        const statusSpan = document.getElementById("status" + id);
-        const button = document.getElementById("btn" + id);
-        const ref = db.ref("/relay" + id);
-
-        ref.on("value", snap => {
+      relays.forEach(i => {
+        const s = document.getElementById("status" + i);
+        const b = document.getElementById("btn" + i);
+        const r = db.ref("/relay" + i);
+        r.on("value", snap => {
           const state = snap.val();
-          statusSpan.innerText = state ? "ON" : "OFF";
-          button.style.backgroundColor = state ? "#43a047" : "#1e88e5";
+          s.innerText = state ? "ON" : "OFF";
+          b.style.background = state ? "var(--accent)" : "var(--primary)";
+          lastUpdate.innerText = new Date().toLocaleTimeString();
         });
-
-        button.onclick = () => {
-          ref.get().then(snap => {
-            ref.set(!snap.val());
-          });
-        };
+        b.onclick = () => r.get().then(snap => r.set(!snap.val()));
       });
-
-      document.getElementById("allOffBtn").onclick = () => {
-        relays.forEach(id => {
-          db.ref("/relay" + id).set(false);
-        });
-      };
+      document.getElementById("allOffBtn").onclick = () => relays.forEach(i => db.ref("/relay" + i).set(false));
     }
 
     document.getElementById("logoutBtn").onclick = () => {
-      firebase.auth().signOut()
-        .then(() => {
-          dashboard.style.display = "none";
-          loginForm.style.display = "block";
-        })
-        .catch(error => {
-          alert("Logout failed: " + error.message);
-        });
-    };
+      firebase.auth().signOut().then(() => {
+        dashboard.style.display = "none";
+        loginForm.style.display = "block";
+      });
+    }
   </script>
 </body>
 </html>
