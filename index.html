@@ -2,167 +2,113 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Smart Home Relay Dashboard</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>ESP8266 Smart Home Dashboard</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <style>
     body {
       font-family: "Segoe UI", sans-serif;
-      background-color: #f4f6f9;
+      background: #f4f4f4;
       margin: 0;
       padding: 0;
       color: #333;
     }
 
     header {
-      background-color: #4CAF50;
+      background: #2f855a;
       color: white;
-      padding: 1rem;
       text-align: center;
+      padding: 1rem;
       font-size: 1.5rem;
+      font-weight: bold;
       box-shadow: 0 2px 5px rgba(0,0,0,0.1);
     }
 
-    .status {
-      text-align: center;
-      margin: 1rem auto;
-    }
-
-    .status span {
-      font-weight: bold;
-      padding: 0.5rem 1rem;
-      border-radius: 10px;
-    }
-
-    .wifi-online {
-      background-color: #d4edda;
-      color: #155724;
-    }
-
-    .wifi-offline {
-      background-color: #f8d7da;
-      color: #721c24;
+    .info-bar {
+      display: flex;
+      justify-content: space-around;
+      background: #e2e8f0;
+      padding: 0.5rem;
+      font-size: 1rem;
     }
 
     .container {
-      max-width: 800px;
-      margin: 1rem auto;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1rem;
       padding: 1rem;
+      max-width: 1000px;
+      margin: auto;
     }
 
-    .relay {
-      background-color: white;
+    .card {
+      background: white;
       border-radius: 10px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
       padding: 1rem;
-      margin: 1rem 0;
-      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
+      text-align: center;
+      transition: 0.3s;
     }
 
-    .relay-status {
-      font-size: 1rem;
+    .card:hover {
+      transform: scale(1.02);
+    }
+
+    .status-label {
+      display: inline-block;
+      padding: 0.4rem 1rem;
+      border-radius: 5px;
       font-weight: bold;
+      margin: 0.5rem 0;
     }
 
-    .relay-on {
-      color: #4CAF50;
+    .on {
+      background: #38a169;
+      color: white;
     }
 
-    .relay-off {
-      color: #f44336;
+    .off {
+      background: #e53e3e;
+      color: white;
     }
 
-    .relay button {
-      padding: 0.5rem 1rem;
+    .toggle-btn {
+      padding: 0.6rem 1.2rem;
       border: none;
-      border-radius: 6px;
-      background-color: #2196F3;
+      background: #3182ce;
       color: white;
       font-weight: bold;
+      border-radius: 5px;
       cursor: pointer;
-      transition: background 0.3s;
+      margin-top: 10px;
+      transition: 0.3s;
     }
 
-    .relay button:hover {
-      background-color: #1976D2;
+    .toggle-btn:hover {
+      background: #2b6cb0;
     }
 
     footer {
       text-align: center;
-      font-size: 0.9rem;
-      color: #999;
       padding: 1rem;
+      font-size: 0.9rem;
+      color: #777;
     }
   </style>
 </head>
 <body>
-  <header>
-    ESP8266 Smart Home Dashboard
-  </header>
+  <header>ESP8266 Smart Home Dashboard</header>
 
-  <div class="status">
-    Wi-Fi Status:
-    <span id="wifiStatus" class="wifi-online">Connected</span>
-    | Uptime: <span id="uptime">Loading...</span>
+  <div class="info-bar">
+    <div>Wi-Fi: <span id="wifiStatus">Checking...</span></div>
+    <div>Uptime: <span id="uptime">0h 0m 0s</span></div>
   </div>
 
   <div class="container">
-    <div class="relay" id="relay1">
-      <span>Relay 1</span>
-      <span class="relay-status" id="r1status">ON</span>
-      <button onclick="toggleRelay(1)">Toggle</button>
+    <div class="card" id="relay1">
+      <h3>Relay 1</h3>
+      <div id="status1" class="status-label on">ON</div>
+      <button class="toggle-btn" onclick="toggleRelay(1)">Toggle</button>
     </div>
-    <div class="relay" id="relay2">
-      <span>Relay 2</span>
-      <span class="relay-status" id="r2status">OFF</span>
-      <button onclick="toggleRelay(2)">Toggle</button>
-    </div>
-    <div class="relay" id="relay3">
-      <span>Relay 3</span>
-      <span class="relay-status" id="r3status">OFF</span>
-      <button onclick="toggleRelay(3)">Toggle</button>
-    </div>
-    <div class="relay" id="relay4">
-      <span>Relay 4</span>
-      <span class="relay-status" id="r4status">ON</span>
-      <button onclick="toggleRelay(4)">Toggle</button>
-    </div>
-  </div>
-
-  <footer>
-    &copy; 2025 SmartHome by Zion
-  </footer>
-
-  <script>
-    let uptimeSec = 0;
-
-    function updateUptime() {
-      uptimeSec++;
-      const hrs = Math.floor(uptimeSec / 3600);
-      const mins = Math.floor((uptimeSec % 3600) / 60);
-      const secs = uptimeSec % 60;
-      document.getElementById("uptime").textContent =
-        `${hrs}h ${mins}m ${secs}s`;
-    }
-
-    function toggleRelay(relayNum) {
-      // You can make an API call to your ESP8266 here
-      alert("Relay " + relayNum + " toggled (dummy action)");
-      // Example: fetch(`/relay${relayNum}/toggle`)
-    }
-
-    // Simulated Wi-Fi check (you can poll your ESP here)
-    function checkWiFi() {
-      // Example: fetch('/wifi-status') then update based on response
-      let isConnected = true; // Simulated
-      let el = document.getElementById("wifiStatus");
-      el.textContent = isConnected ? "Connected" : "Disconnected";
-      el.className = isConnected ? "wifi-online" : "wifi-offline";
-    }
-
-    setInterval(updateUptime, 1000); // Update uptime every second
-    setInterval(checkWiFi, 5000);    // Update WiFi status every 5 sec
-  </script>
-</body>
-</html>
+    <div class="card" id="relay2">
+      <h3>Relay 2</h3>
+      <div id="status2" class="status-label off">OFF</div>
