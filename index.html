@@ -2,80 +2,94 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Zion's Smart Home Dashboard</title>
   <style>
     body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      font-family: 'Segoe UI', sans-serif;
       background: #f2f4f8;
       margin: 0;
       padding: 0;
     }
     .container {
-      max-width: 700px;
-      margin: 50px auto;
+      max-width: 750px;
+      margin: 40px auto;
       background: #fff;
       padding: 30px;
-      border-radius: 10px;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      border-radius: 12px;
+      box-shadow: 0 6px 16px rgba(0,0,0,0.1);
     }
     h1 {
       text-align: center;
       color: #2c3e50;
     }
-    .info {
+    .info, .footer {
       text-align: center;
-      margin-bottom: 30px;
+      margin-bottom: 20px;
+      font-size: 15px;
+      color: #555;
     }
     .status-box {
       background: #ecf0f1;
       border-left: 6px solid #3498db;
-      padding: 15px 20px;
-      margin-bottom: 15px;
-      border-radius: 5px;
-      font-size: 18px;
+      padding: 12px 20px;
+      margin-bottom: 10px;
+      border-radius: 6px;
+      font-size: 17px;
     }
-    .footer {
+    .relays {
+      margin-top: 30px;
       text-align: center;
-      font-size: 14px;
-      color: #888;
-      margin-top: 20px;
     }
-    button {
-      background-color: #e74c3c;
+    .relay-btn {
+      display: inline-block;
+      margin: 8px;
+      padding: 12px 20px;
       border: none;
+      border-radius: 6px;
+      background-color: #2ecc71;
       color: white;
-      padding: 10px 20px;
-      border-radius: 5px;
       font-size: 16px;
       cursor: pointer;
-      margin-top: 10px;
+    }
+    .relay-btn.off {
+      background-color: #e74c3c;
+    }
+    .relay-btn:hover {
+      opacity: 0.9;
     }
   </style>
+
   <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
 </head>
 <body>
   <div class="container">
     <h1>Zion's Smart Home Dashboard</h1>
-    <div class="info">
-      <p>Logged in as: <strong>mmzionbd@gmail.com</strong></p>
-      <button onclick="logout()">Logout</button>
-    </div>
+    <div class="info">Logged in as: <strong>mmzionbd@gmail.com</strong></div>
+
     <div id="wifi" class="status-box">WiFi: Loading...</div>
     <div id="firebase" class="status-box">Firebase: Loading...</div>
     <div id="uptime" class="status-box">Uptime: Loading...</div>
     <div id="heartbeat" class="status-box">Last Heartbeat: Loading...</div>
+
+    <div class="relays">
+      <button class="relay-btn" onclick="toggleRelay(1)">Toggle Relay 1</button>
+      <button class="relay-btn" onclick="toggleRelay(2)">Toggle Relay 2</button>
+      <button class="relay-btn" onclick="toggleRelay(3)">Toggle Relay 3</button>
+      <button class="relay-btn" onclick="toggleRelay(4)">Toggle Relay 4</button>
+    </div>
+
     <div class="footer">© 2025 M. M. Zion</div>
   </div>
 
   <script>
     const firebaseConfig = {
       apiKey: "YOUR_API_KEY",
-      authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
+      authDomain: "esp-test-ff3e3.firebaseapp.com",
       databaseURL: "https://esp-test-ff3e3-default-rtdb.firebaseio.com",
       projectId: "esp-test-ff3e3",
-      storageBucket: "YOUR_PROJECT_ID.appspot.com",
+      storageBucket: "esp-test-ff3e3.appspot.com",
       messagingSenderId: "YOUR_SENDER_ID",
       appId: "YOUR_APP_ID"
     };
@@ -89,16 +103,16 @@
       });
 
       db.ref("/firebase_ready").on("value", snap => {
-        const status = snap.val() ? "Ready" : "Not Ready";
+        const status = snap.val() ? "Ready ✅" : "Not Ready ❌";
         document.getElementById("firebase").innerText = "Firebase: " + status;
       });
 
       db.ref("/uptime").on("value", snap => {
-        let seconds = parseInt(snap.val());
-        let minutes = Math.floor(seconds / 60);
-        let hours = Math.floor(minutes / 60);
-        let uptimeString = `${hours}h ${minutes % 60}m ${seconds % 60}s`;
-        document.getElementById("uptime").innerText = "Uptime: " + uptimeString;
+        const sec = parseInt(snap.val());
+        const h = Math.floor(sec / 3600);
+        const m = Math.floor((sec % 3600) / 60);
+        const s = sec % 60;
+        document.getElementById("uptime").innerText = `Uptime: ${h}h ${m}m ${s}s`;
       });
 
       db.ref("/heartbeat").on("value", snap => {
@@ -106,9 +120,12 @@
       });
     }
 
-    function logout() {
-      alert("You are now logged out.");
-      // Optional: Add auth sign-out if using Firebase Auth
+    function toggleRelay(n) {
+      const relayPath = "/relay" + n;
+      db.ref(relayPath).once("value").then(snapshot => {
+        const currentState = snapshot.val();
+        db.ref(relayPath).set(!currentState);
+      });
     }
 
     updateStatus();
